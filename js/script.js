@@ -68,6 +68,27 @@ function removeClass(dayKey, index) {
     }
 }
 
+function editClass(dayKey, index) {
+    const cls = schedule[dayKey].classes[index];
+    const time = prompt("Horário (ex: 20:30 – 22:00):", cls.time);
+    if (!time) return;
+    const subject = prompt("Matéria:", cls.subject);
+    if (!subject) return;
+    const tag = prompt("Tag (ex: Direito):", cls.tag) || "Direito";
+    const prof = prompt("Professor (opcional):", cls.prof || "");
+    const color = prompt("Cor (ex: #7C5CFF):", cls.color) || "#7C5CFF";
+
+    schedule[dayKey].classes[index] = {
+        time,
+        subject,
+        tag,
+        prof: prof || undefined,
+        color
+    };
+    saveSchedule();
+    render();
+}
+
 function renderTabs() {
     const container = document.getElementById("tabs");
     container.innerHTML = "";
@@ -113,7 +134,10 @@ function renderDay() {
         <div class="subject-name">${cls.subject}</div>
         <div class="subject-tag">${cls.tag}</div>
         ${cls.prof ? `<div class="prof">👤 ${cls.prof}</div>` : ""}
-        <button class="remove-btn" onclick="removeClass('${activeKey}', ${i})">🗑️ Remover</button>
+        <div class="card-buttons">
+          <button class="edit-btn" onclick="editClass('${activeKey}', ${i})">✏️ Editar</button>
+          <button class="remove-btn" onclick="removeClass('${activeKey}', ${i})">🗑️ Remover</button>
+        </div>
       </div>
     `;
         list.appendChild(card);
